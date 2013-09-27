@@ -186,17 +186,17 @@ static int nunchuck_joyy()
 // returns value of x-axis accelerometer
 static int nunchuck_accelx()
 {
-    return nunchuck_buf[2];   // FIXME: this leaves out 2-bits of the data
+    return (nunchuck_buf[2]<<2)+((nunchuck_buf[5]>>2)&3);   // now uses all 10-bits of data
 }
 
 // returns value of y-axis accelerometer
 static int nunchuck_accely()
 {
-    return nunchuck_buf[3];   // FIXME: this leaves out 2-bits of the data
+    return (nunchuck_buf[3]<<2)+((nunchuck_buf[5]>>4)&3);   // now uses all 10-bits of data
 }
 
 // returns value of z-axis accelerometer
 static int nunchuck_accelz()
 {
-    return nunchuck_buf[4];   // FIXME: this leaves out 2-bits of the data
+    return (nunchuck_buf[3]<<2)+((nunchuck_buf[5]>>6)&3);   // now uses all 10-bits of data
 }
