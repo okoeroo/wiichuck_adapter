@@ -1,7 +1,7 @@
 /*
  * Nunchuck functions  -- Talk to a Wii Nunchuck
  *
- * This library is from the Bionic Arduino course : 
+ * This library is from the Bionic Arduino course :
  *                          http://todbot.com/blog/bionicarduino/
  *
  * 2007-11 Tod E. Kurt, http://todbot.com/blog/
@@ -30,21 +30,21 @@ static void nunchuck_setpowerpins()
     DDRC |= _BV(pwrpin) | _BV(gndpin);
     PORTC &=~ _BV(gndpin);
     PORTC |=  _BV(pwrpin);
-    delay(100);  // wait for things to stabilize        
+    delay(100);  // wait for things to stabilize
 }
 
 // initialize the I2C system, join the I2C bus,
 // and tell the nunchuck we're talking to it
 static void nunchuck_init()
-{ 
+{
     Wire.begin();                // join i2c bus as master
     Wire.beginTransmission(0x52);// transmit to device 0x52
 #if (ARDUINO >= 100)
     Wire.write((uint8_t)0x40);// sends memory address
-    Wire.write((uint8_t)0x00);// sends sent a zero.  
+    Wire.write((uint8_t)0x00);// sends sent a zero.
 #else
     Wire.send((uint8_t)0x40);// sends memory address
-    Wire.send((uint8_t)0x00);// sends sent a zero.  
+    Wire.send((uint8_t)0x00);// sends sent a zero.
 #endif
     Wire.endTransmission();// stop transmitting
 }
@@ -70,7 +70,7 @@ static char nunchuk_decode_byte (char x)
     return x;
 }
 
-// Receive data back from the nunchuck, 
+// Receive data back from the nunchuck,
 // returns 1 on successful read. returns 0 on failure
 static int nunchuck_get_data()
 {
@@ -99,11 +99,11 @@ static int nunchuck_get_data()
 // on the last 2 bits.  That is why I
 // multiply them by 2 * 2
 static void nunchuck_print_data()
-{ 
+{
     static int i=0;
     int joy_x_axis = nunchuck_buf[0];
     int joy_y_axis = nunchuck_buf[1];
-    int accel_x_axis = nunchuck_buf[2]; // * 2 * 2; 
+    int accel_x_axis = nunchuck_buf[2]; // * 2 * 2;
     int accel_y_axis = nunchuck_buf[3]; // * 2 * 2;
     int accel_z_axis = nunchuck_buf[4]; // * 2 * 2;
 
@@ -113,12 +113,12 @@ static void nunchuck_print_data()
     // byte nunchuck_buf[5] contains bits for z and c buttons
     // it also contains the least significant bits for the accelerometer data
     // so we have to check each bit of byte outbuf[5]
-    if ((nunchuck_buf[5] >> 0) & 1) 
+    if ((nunchuck_buf[5] >> 0) & 1)
         z_button = 1;
     if ((nunchuck_buf[5] >> 1) & 1)
         c_button = 1;
 
-    if ((nunchuck_buf[5] >> 2) & 1) 
+    if ((nunchuck_buf[5] >> 2) & 1)
         accel_x_axis += 1;
     if ((nunchuck_buf[5] >> 3) & 1)
         accel_x_axis += 2;
@@ -174,7 +174,7 @@ static int nunchuck_cbutton()
 // returns value of x-axis joystick
 static int nunchuck_joyx()
 {
-    return nunchuck_buf[0]; 
+    return nunchuck_buf[0];
 }
 
 // returns value of y-axis joystick
@@ -198,5 +198,5 @@ static int nunchuck_accely()
 // returns value of z-axis accelerometer
 static int nunchuck_accelz()
 {
-    return (nunchuck_buf[3]<<2)+((nunchuck_buf[5]>>6)&3);   // now uses all 10-bits of data
+    return (nunchuck_buf[4]<<2)+((nunchuck_buf[5]>>6)&3);   // now uses all 10-bits of data
 }
